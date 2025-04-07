@@ -23,13 +23,14 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         ReceitaAdapter adapter = new ReceitaAdapter(receitas, receita -> {
             Intent intent = new Intent(MainActivity.this, RecipeDetailActivity.class);
             intent.putExtra("nome", receita.getNome());
             intent.putExtra("ingredientes", receita.getIngredientes());
             intent.putExtra("preparo", receita.getPreparo());
             startActivity(intent);
-        });
+        }, this); // <-- contexto passado corretamente
 
         recyclerView.setAdapter(adapter);
     }
