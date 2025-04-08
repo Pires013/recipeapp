@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         receitas = new ArrayList<>();
         receitas.add(new Receita("Bolo de Chocolate", R.drawable.bolo, "2 ovos, 1 xícara de leite, 2 colheres de chocolate em pó", "Misture tudo e asse por 40 minutos"));
@@ -38,10 +43,20 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("ingredientes", receita.getIngredientes());
             intent.putExtra("preparo", receita.getPreparo());
             startActivity(intent);
-        }, this); 
+        }, this);
 
         recyclerView.setAdapter(adapter);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.menu_favoritos) {
+                startActivity(new Intent(MainActivity.this, FavoritosActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -51,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_favoritos) {
-            Intent intent = new Intent(MainActivity.this, FavoritosActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, FavoritosActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
