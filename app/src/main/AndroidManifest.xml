@@ -26,7 +26,12 @@
         <!-- Tela de detalhes da receita -->
         <activity
             android:name=".RecipeDetailActivity"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <!-- Tela de favoritos -->
+        <activity
+            android:name=".FavoritosActivity"
+            android:exported="false" />
 
     </application>
 
