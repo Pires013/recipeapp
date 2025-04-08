@@ -1,42 +1,46 @@
 package com.example.receitas;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.content.SharedPreferences;
 import android.view.View;
-import android.view.ViewGroup;
-import androidx.annotation.NonNull;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.List;
 
-public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaViewHolder> {
-    private final List<Receita> receitas;
-    private final OnItemClickListener listener;
-    private final Context context;
+public class ReceitaViewHolder extends RecyclerView.ViewHolder {
 
-    public interface OnItemClickListener {
-        void onItemClick(Receita receita);
+    private final TextView textNome;
+    private final ImageView imageReceita;
+    private final ImageButton btnFavorito;
+
+    public ReceitaViewHolder(View itemView) {
+        super(itemView);
+        textNome = itemView.findViewById(R.id.textNome);
+        imageReceita = itemView.findViewById(R.id.imageReceita);
+        btnFavorito = itemView.findViewById(R.id.btnFavorito);
     }
 
-    public ReceitaAdapter(List<Receita> receitas, OnItemClickListener listener, Context context) {
-        this.receitas = receitas;
-        this.listener = listener;
-        this.context = context;
-    }
+    public void bind(final Receita receita, final ReceitaAdapter.OnItemClickListener listener, final Context context) {
+        textNome.setText(receita.getNome());
+        imageReceita.setImageResource(receita.getImagem());
 
-    @NonNull
-    @Override
-    public ReceitaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_receita, parent, false);
-        return new ReceitaViewHolder(view);
-    }
+        SharedPreferences prefs = context.getSharedPreferences("favoritos", Context.MODE_PRIVATE);
+        boolean favoritoSalvo = prefs.getBoolean(receita.getNome(), false);
+        receita.setFavorito(favoritoSalvo);
 
-    @Override
-    public void onBindViewHolder(@NonNull ReceitaViewHolder holder, int position) {
-        holder.bind(receitas.get(position), listener, context);
-    }
+        btnFavorito.setImageResource(favoritoSalvo ? R.drawable.ic_favorito_on : R.drawable.ic_favorito_off);
 
-    @Override
-    public int getItemCount() {
-        return receitas.size();
+        btnFavorito.setOnClickListener(view -> {
+            boolean novoEstado = !receita.isFavorito();
+            receita.setFavorito(novoEstado);
+            btnFavorito.setImageResource(novoEstado ? R.drawable.ic_favorito_on : R.drawable.ic_favorito_off);
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(receita.getNome(), novoEstado);
+            editor.apply();
+        });
+
+        itemView.setOnClickListener(view -> listener.onItemClick(receita));
     }
 }
