@@ -44,13 +44,6 @@ String url = "http://SEU_IP_LOCAL:8080/receitas";
 
 4. Execute no emulador ou em um dispositivo físico.
 
----
-
-## 📸 Prints do Aplicativo (Exemplo - Substitua pelos seus prints)
-
-| Lista de Receitas | Adicionar Receita | Remover Receita |
-|---|---|---|
-| ![print-lista](link_da_imagem) | ![print-add](link_da_imagem) | ![print-delete](link_da_imagem) |
 
 ---
 
